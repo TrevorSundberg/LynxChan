@@ -683,16 +683,20 @@ exports.createBoard = function(captchaId, parameters, userData, language,
     return;
   }
 
-  captchaOps.attemptCaptcha(captchaId, parameters.captcha, null, language,
-      function solvedCaptcha(error) {
+  if (userData.globalRole === 0) {
+    exports.insertBoard(parameters, userData, language, callback);
+  } else {
+    captchaOps.attemptCaptcha(captchaId, parameters.captcha, null, language,
+        function solvedCaptcha(error) {
 
-        if (error) {
-          callback(error);
-        } else {
-          exports.insertBoard(parameters, userData, language, callback);
-        }
+          if (error) {
+            callback(error);
+          } else {
+            exports.insertBoard(parameters, userData, language, callback);
+          }
 
-      });
+        });
+  }
 
 };
 // } Section 4: Creation
